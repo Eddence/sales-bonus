@@ -96,7 +96,7 @@ function analyzeSalesData(data, options) {
             if (!seller.produts_sales[item.sku]) {
                 seller.produts_sales[item.sku] = 0;
             }
-            seller.produts_sales[item.sku]++;
+            seller.produts_sales[item.sku] += item.quantity;;
         })
     })
     // @TODO: Сортировка продавцов по прибыли
