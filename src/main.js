@@ -100,8 +100,30 @@ function analyzeSalesData(data, options) {
         })
     })
     // @TODO: Сортировка продавцов по прибыли
-
+    sellerStats.sort((sel1, sel2) => {
+        if (sel1.profit > sel2.profit) return -1;
+        else if (sel1.profit < sel2.profit) return 1;
+        return 0;
+    })
     // @TODO: Назначение премий на основе ранжирования
-
+    sellerStats.forEach((seller, index) => {
+        seller.bonus = calculateBonus(index, sellerStats.length, seller);
+        seller.produts_sales = Object.entries(seller.produts_sales).map(item => item);
+        seller.produts_sales.sort((pr1, pr2) => {
+            if (pr1[1] > pr2[1]) return -1;
+            else if (pr1[1] < pr2[1]) return 1;
+            return 0;
+        })
+        seller.produts_sales = seller.produts_sales.slice(0, 10);
+    })
     // @TODO: Подготовка итоговой коллекции с нужными полями
+    return sellerStats.map(seller => ({
+        seller_id: seller.id,
+        name: seller.name,
+        revenue: +seller.revenue.toFixed(2),
+        profit: +seller.profit.toFixed(2),
+        sales_count: seller.sales_count,
+        top_products: seller.produts_sales.map(product => ({sku: product[0], quantity: product[1]})),
+        bonus: +seller.bonus.toFixed(2)
+    }))
 }
